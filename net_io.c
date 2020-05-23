@@ -51,9 +51,11 @@
 
 /* for PRIX64 */
 #include <inttypes.h>
+#include <math.h>
 
 #include <assert.h>
 #include <stdarg.h>
+
 
 //
 // ============================= Networking =============================
@@ -437,15 +439,20 @@ static void writeBeastMessage(struct net_writer *writer, uint64_t timestamp, dou
     *p++ = (timestamp >> 8);
     *p++ = (timestamp);
 
-
+	/*
     sig = round(sqrt(signalLevel) * 255);
     if (signalLevel > 0 && sig < 1)
         sig = 1;
     if (sig > 255)
         sig = 255;
     *p++ = (char)sig;
-	
-	
+	*/
+	sig = log10(sig)
+	unsigned int help = round(sig*1000000)
+	*p++ = (help >> 24);
+    *p++ = (help >> 16);
+    *p++ = (help >> 8);
+    *p++ = (help);
 
     for (j = 0; j < msgLen; j++) {
         *p++ = (ch = msg[j]);
