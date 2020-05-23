@@ -437,32 +437,18 @@ static void writeBeastMessage(struct net_writer *writer, uint64_t timestamp, dou
     *p++ = (timestamp >> 8);
     *p++ = (timestamp);
 
-	/*
+
     sig = round(sqrt(signalLevel) * 255);
     if (signalLevel > 0 && sig < 1)
         sig = 1;
     if (sig > 255)
         sig = 255;
-    *p++ = ch = (char)sig;
-    if (0x1A == ch) {*p++ = ch; }
-	
-	signal Level, big-endian
-	*/
-	
-	*p++ = (signalLevel >> 56);
-	*p++ = (signalLevel >> 48);
-	*p++ = (signalLevel >> 40);
-	*p++ = (signalLevel >> 32);
-	*p++ = (signalLevel >> 24);
-	*p++ = (signalLevel >> 16);
-	*p++ = (signalLevel >> 8);
-	*p++ = (signalLevel);
+    *p++ = (char)sig;
 	
 	
 
     for (j = 0; j < msgLen; j++) {
         *p++ = (ch = msg[j]);
-        if (0x1A == ch) {*p++ = ch; }
     }
 
     completeWrite(writer, p);
