@@ -431,12 +431,12 @@ static void writeBeastMessage(struct net_writer *writer, uint64_t timestamp, dou
       {return;}
 
     /* timestamp, big-endian */
-    *p++ = (timestamp >> 40);
-    *p++ = (timestamp >> 32);
-    *p++ = (timestamp >> 24);
-    *p++ = (timestamp >> 16);
-    *p++ = (timestamp >> 8);
-    *p++ = (timestamp);
+    *p++ = (ch = (timestamp >> 40));
+    *p++ = (ch = (timestamp >> 32));
+    *p++ = (ch = (timestamp >> 24));
+    *p++ = (ch = (timestamp >> 16));
+    *p++ = (ch = (timestamp >> 8));
+    *p++ = (ch = (timestamp));
 
 	/*
     sig = round(sqrt(signalLevel) * 255);
@@ -448,10 +448,10 @@ static void writeBeastMessage(struct net_writer *writer, uint64_t timestamp, dou
 	*/
     double sig = log10(signalLevel);
     unsigned int help = round(sig*1000000);
-    *p++ = (help >> 24);
-    *p++ = (help >> 16);
-    *p++ = (help >> 8);
-    *p++ = (help);
+    *p++ = (j = help >> 24);
+    *p++ = (j = help >> 16);
+    *p++ = (j = help >> 8);
+    *p++ = (j = help);
 
     for (j = 0; j < msgLen; j++) {
         *p++ = (ch = msg[j]);
