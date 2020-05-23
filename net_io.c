@@ -447,9 +447,9 @@ static void writeBeastMessage(struct net_writer *writer, uint64_t timestamp, dou
         sig = 255;
     *p++ = (char)sig;
 	*/
-	sig = log10(sig)
-	unsigned int help = round(sig*1000000)
-	*p++ = (help >> 24);
+    sig = log10(sig);
+    unsigned int help = round(sig*1000000);
+    *p++ = (help >> 24);
     *p++ = (help >> 16);
     *p++ = (help >> 8);
     *p++ = (help);
