@@ -430,14 +430,19 @@ static void writeBeastMessage(struct net_writer *writer, uint64_t timestamp, dou
       {return;}
 
     /* timestamp, big-endian */
-    *p++ = (timestamp >> 40);
-    *p++ = (timestamp >> 32);
-    *p++ = (timestamp >> 24);
-    *p++ = (timestamp >> 16);
-    *p++ = (timestamp >> 8);
-    *p++ = (timestamp);
+    *p++ = (ch = (timestamp >> 40));
+    if (0x1A == ch) {*p++ = ch; }
+    *p++ = (ch = (timestamp >> 32));
+    if (0x1A == ch) {*p++ = ch; }
+    *p++ = (ch = (timestamp >> 24));
+    if (0x1A == ch) {*p++ = ch; }
+    *p++ = (ch = (timestamp >> 16));
+    if (0x1A == ch) {*p++ = ch; }
+    *p++ = (ch = (timestamp >> 8));
+    if (0x1A == ch) {*p++ = ch; }
+    *p++ = (ch = (timestamp));
+    if (0x1A == ch) {*p++ = ch; }
 
-	/*
     sig = round(sqrt(signalLevel) * 255);
     if (signalLevel > 0 && sig < 1)
         sig = 1;
@@ -445,20 +450,6 @@ static void writeBeastMessage(struct net_writer *writer, uint64_t timestamp, dou
         sig = 255;
     *p++ = ch = (char)sig;
     if (0x1A == ch) {*p++ = ch; }
-	
-	signal Level, big-endian
-	*/
-	
-	*p++ = (signalLevel >> 56)
-	*p++ = (signalLevel >> 48)
-	*p++ = (signalLevel >> 40)
-	*p++ = (signalLevel >> 32)
-	*p++ = (signalLevel >> 24)
-	*p++ = (signalLevel >> 16)
-	*p++ = (signalLevel >> 8)
-	*p++ = (signalLevel)
-	
-	
 
     for (j = 0; j < msgLen; j++) {
         *p++ = (ch = msg[j]);
