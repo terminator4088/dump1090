@@ -392,7 +392,7 @@ static void modesSendBeastVerbatimOutput(struct modesMessage *mm, struct aircraf
         return;
 
     // Do verbatim output for all messages
-    writeBeastMessage(&Modes.beast_verbatim_out, mm->timestampMsg, mm->signalLevel, mm->verbatim, mm->msgbits / 8);
+    writeBeastMessage(&Modes.beast_verbatim_out, mm->timestampMsg, mm->signalLevel, mm->verbatim, mm->msgbits / 8, a->addr);
 }
 
 static void modesSendBeastCookedOutput(struct modesMessage *mm, struct aircraft *a) {
@@ -409,10 +409,10 @@ static void modesSendBeastCookedOutput(struct modesMessage *mm, struct aircraft 
     if ((a && !a->reliable) && !mm->reliable)
         return;
 
-    writeBeastMessage(&Modes.beast_cooked_out, mm->timestampMsg, mm->signalLevel, mm->msg, mm->msgbits / 8);
+    writeBeastMessage(&Modes.beast_cooked_out, mm->timestampMsg, mm->signalLevel, mm->msg, mm->msgbits / 8, a->addr);
 }
 
-static void writeBeastMessage(struct net_writer *writer, uint64_t timestamp, double signalLevel, unsigned char *msg, int msgLen) {
+static void writeBeastMessage(struct net_writer *writer, uint64_t timestamp, double signalLevel, unsigned char *msg, int msgLen, uint32_t icao_addr) {
     char ch;
     int  j;
 
@@ -438,14 +438,7 @@ static void writeBeastMessage(struct net_writer *writer, uint64_t timestamp, dou
     *p++ = (ch = (timestamp >> 8));
     *p++ = (ch = (timestamp));
 
-	/*
-    sig = round(sqrt(signalLevel) * 255);
-    if (signalLevel > 0 && sig < 1)
-        sig = 1;
-    if (sig > 255)
-        sig = 255;
-    *p++ = (char)sig;
-	*/
+
     double sig = log10(signalLevel);
 	int help2 = (int)round(sig*1000000);
     int help = abs(help2);
@@ -453,6 +446,12 @@ static void writeBeastMessage(struct net_writer *writer, uint64_t timestamp, dou
     *p++ = (j = help >> 16);
     *p++ = (j = help >> 8);
     *p++ = (j = help);
+
+	*p++ = (j = icao_addr >> 24);
+	*p++ = (j = icao_addr >> 16);
+	*p++ = (j = icao_addr >> 8);
+	*p++ = (j = icao_addr);
+	
 
     for (j = 0; j < msgLen; j++) {
         *p++ = (ch = msg[j]);
