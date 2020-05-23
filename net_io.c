@@ -415,7 +415,6 @@ static void modesSendBeastCookedOutput(struct modesMessage *mm, struct aircraft 
 static void writeBeastMessage(struct net_writer *writer, uint64_t timestamp, double signalLevel, unsigned char *msg, int msgLen) {
     char ch;
     int  j;
-    int sig;
 
     char *p = prepareWrite(writer, 2 + 2 * (7 + msgLen));
     if (!p)
@@ -447,7 +446,7 @@ static void writeBeastMessage(struct net_writer *writer, uint64_t timestamp, dou
         sig = 255;
     *p++ = (char)sig;
 	*/
-    sig = log10(sig);
+    double sig = log10(signalLevel);
     unsigned int help = round(sig*1000000);
     *p++ = (help >> 24);
     *p++ = (help >> 16);
