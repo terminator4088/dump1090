@@ -51,11 +51,10 @@
 
 /* for PRIX64 */
 #include <inttypes.h>
-#include <math.h>
+#include <stdio.h>
 
 #include <assert.h>
 #include <stdarg.h>
-#include <stdlib.h>
 
 //
 // ============================= Networking =============================
@@ -390,9 +389,14 @@ static void modesSendBeastVerbatimOutput(struct modesMessage *mm, struct aircraf
     // Don't forward mlat messages, unless --forward-mlat is set
     if (mm->source == SOURCE_MLAT && !Modes.forward_mlat)
         return;
+        
+    unsigned int h = 0;
+    if (a != NULL) {
+	    h = a->addr;
+    } 
 
     // Do verbatim output for all messages
-    writeBeastMessage(&Modes.beast_verbatim_out, mm->timestampMsg, mm->signalLevel, mm->verbatim, mm->msgbits / 8, a->addr);
+    writeBeastMessage(&Modes.beast_verbatim_out, mm->timestampMsg, mm->signalLevel, mm->verbatim, mm->msgbits / 8, h);
 }
 
 static void modesSendBeastCookedOutput(struct modesMessage *mm, struct aircraft *a) {
@@ -408,8 +412,13 @@ static void modesSendBeastCookedOutput(struct modesMessage *mm, struct aircraft 
     // Don't forward unreliable messages
     if ((a && !a->reliable) && !mm->reliable)
         return;
-
-    writeBeastMessage(&Modes.beast_cooked_out, mm->timestampMsg, mm->signalLevel, mm->msg, mm->msgbits / 8, a->addr);
+        
+    unsigned int h = 0;
+    if (a != NULL) {
+	    h = a->addr;
+    }  
+    
+    writeBeastMessage(&Modes.beast_cooked_out, mm->timestampMsg, mm->signalLevel, mm->msg, mm->msgbits / 8, h);
 }
 
 static void writeBeastMessage(struct net_writer *writer, uint64_t timestamp, double signalLevel, unsigned char *msg, int msgLen, uint32_t icao_addr) {
@@ -428,7 +437,9 @@ static void writeBeastMessage(struct net_writer *writer, uint64_t timestamp, dou
     else if (msgLen == MODEAC_MSG_BYTES)
       {*p++ = '1';}
     else
-      {return;}
+     	{
+      return;
+     	}
 
     /* timestamp, big-endian */
     *p++ = (ch = (timestamp >> 40));
@@ -440,18 +451,17 @@ static void writeBeastMessage(struct net_writer *writer, uint64_t timestamp, dou
 
 
     double sig = log10(signalLevel);
-	int help2 = (int)round(sig*1000000);
+    int help2 = (int)round(sig*1000000);
     int help = abs(help2);
     *p++ = (j = help >> 24);
     *p++ = (j = help >> 16);
     *p++ = (j = help >> 8);
     *p++ = (j = help);
 
-	*p++ = (j = icao_addr >> 24);
-	*p++ = (j = icao_addr >> 16);
-	*p++ = (j = icao_addr >> 8);
-	*p++ = (j = icao_addr);
-	
+    *p++ = (j = icao_addr >> 24);
+    *p++ = (j = icao_addr >> 16);
+    *p++ = (j = icao_addr >> 8);
+    *p++ = (j = icao_addr);
 
     for (j = 0; j < msgLen; j++) {
         *p++ = (ch = msg[j]);
