@@ -441,14 +441,15 @@ static void writeBeastMessage(struct net_writer *writer, uint64_t timestamp, dou
       return;
      	}
 
-    /* timestamp, big-endian */
+    /* timestamp, big-endian  --- Removed due to inaccuracy
     *p++ = (ch = (timestamp >> 40));
     *p++ = (ch = (timestamp >> 32));
     *p++ = (ch = (timestamp >> 24));
     *p++ = (ch = (timestamp >> 16));
     *p++ = (ch = (timestamp >> 8));
     *p++ = (ch = (timestamp));
-
+    */
+    timestamp = timestamp;
 
     double sig = log10(signalLevel);
     int help2 = (int)round(sig*1000000);
