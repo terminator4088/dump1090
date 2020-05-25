@@ -394,9 +394,9 @@ static void modesSendBeastVerbatimOutput(struct modesMessage *mm, struct aircraf
     if (a != NULL) {
 	    h = a->addr;
     } 
-
+    h = h;
     // Do verbatim output for all messages
-    writeBeastMessage(&Modes.beast_verbatim_out, mm->timestampMsg, mm->signalLevel, mm->verbatim, mm->msgbits / 8, h);
+    //writeBeastMessage(&Modes.beast_verbatim_out, mm->timestampMsg, mm->signalLevel, mm->verbatim, mm->msgbits / 8, h);
 }
 
 static void modesSendBeastCookedOutput(struct modesMessage *mm, struct aircraft *a) {
@@ -466,6 +466,11 @@ static void writeBeastMessage(struct net_writer *writer, uint64_t timestamp, dou
     for (j = 0; j < msgLen; j++) {
         *p++ = (ch = msg[j]);
     }
+    ch = '\n';
+    
+    *p++ = ch;
+    *p++ = ch;
+    *p++ = ch;
 
     completeWrite(writer, p);
 }
