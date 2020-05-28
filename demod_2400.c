@@ -547,6 +547,12 @@ void demodulate2400AC(struct mag_buf *mag)
         float f1b_power = (float)m[f1_sample+1] * m[f1_sample+1];
         float fraction = f1b_power / (f1a_power + f1b_power);
         unsigned f1_clock = (unsigned) (25 * (f1_sample + fraction * fraction) + 0.5);
+        
+        if (fraction > 0.5f)
+        	mm.signalLevel = f1b_power;
+        else
+        	mm.signalLevel = f1a_power;
+        
 
         // same again for F2
         // F2 is 20.3us / 14 bit periods after F1
