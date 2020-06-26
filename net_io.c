@@ -416,7 +416,8 @@ static void modesSendBeastCookedOutput(struct modesMessage *mm, struct aircraft 
     unsigned int h = 0;
     if (a != NULL) {
 	    h = a->addr;
-    }  
+    }
+    h = h;
     
     writeBeastMessage(&Modes.beast_cooked_out, mm->timestampMsg, mm->signalLevel, mm->msg, mm->msgbits / 8, h);
 }
