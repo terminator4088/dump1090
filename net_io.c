@@ -394,7 +394,7 @@ static void modesSendBeastVerbatimOutput(struct modesMessage *mm, struct aircraf
     if (a != NULL) {
 	    h = a->addr;
     } 
-    //h = h;
+    h = h;
     // Do verbatim output for all messages
     //writeBeastMessage(&Modes.beast_verbatim_out, mm->timestampMsg, mm->signalLevel, mm->verbatim, mm->msgbits / 8, h);
 }
