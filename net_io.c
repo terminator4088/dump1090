@@ -410,8 +410,8 @@ static void modesSendBeastCookedOutput(struct modesMessage *mm, struct aircraft 
     //    return;
 
     // Don't forward unreliable messages
-    if ((a && !a->reliable) && !mm->reliable)
-        return;
+    //if ((a && !a->reliable) && !mm->reliable)
+    //    return;
         
     unsigned int h = 0;
     if (a != NULL) {
